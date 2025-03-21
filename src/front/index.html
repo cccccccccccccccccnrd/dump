@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      * {
+        box-sizing: border-box;
+        cursor: all-scroll;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      article {
+        position: relative;
+        display: flex;
+        opacity: 0.9;
+        z-index: 0;
+      }
+
+      article.active {
+        opacity: 1;
+        transform: scale(2);
+        z-index: 5;
+      }
+
+      video {
+        display: block;
+        width: calc(100vw / 7);
+        height: auto;
+        cursor: zoom-in;
+      }
+
+      p {
+        position: absolute;
+        color: white;
+        font-size: 0.75rem;
+        margin: 0;
+        padding: 0.5rem;
+        text-align: center;
+        width: 100%;
+        z-index: 5;
+        text-shadow: ;
+      }
+    </style>
+  </head>
+  <body>
+    <main></main>
+    <script>
+      let active = null
+      let scale = 8
+
+      async function init() {
+        const response = await fetch('/f')
+        const dump = await response.json()
+        dump.map((f) => {
+          const d = document.createElement('article')
+          const p = document.createElement('p')
+          p.innerText = `${new Date(f.timestamp).toLocaleDateString('en-US')} ${new Date(
+            f.timestamp
+          ).toLocaleTimeString('en-US')}`
+
+          const v = document.createElement('video')
+          v.src = `/data/${f.name}`
+          v.poster = `/data/${f.name}.png`
+          v.controls = false
+          v.autoplay = false
+          v.loop = true
+          v.muted = true
+
+          v.addEventListener('mouseenter', () => {
+            v.play()
+            v.parentNode.classList.add('active')
+            active = v
+            v.muted = false
+          })
+
+          v.addEventListener('mouseleave', () => {
+            v.pause()
+            v.parentNode.classList.remove('active')
+            v.muted = true
+            active = null
+          })
+
+          d.appendChild(p)
+          d.appendChild(v)
+          document.querySelector('main').appendChild(d)
+        })
+      }
+
+      init()
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+          scale -= 1
+        }
+        if (e.key === 'ArrowLeft') {
+          scale += 1
+        }
+
+        if (scale < 1) {
+          scale = 1
+        }
+
+        document.querySelectorAll('video').forEach((v) => {
+          v.style.width = `calc(100vw / ${scale})`
+        })
+      })
+    </script>
+  </body>
+</html>

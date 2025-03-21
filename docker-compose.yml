@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  back:
+    container_name: dump
+    build:
+      context: .
+      dockerfile: dump.Dockerfile
+    ports:
+      - 8782:8782
+    volumes:
+      - ./src/data:/app/data
+
+
