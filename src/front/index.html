@@ -52,11 +52,60 @@
         text-align: center;
         width: 100%;
         z-index: 5;
-        text-shadow: ;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        display: none;
+      }
+
+      nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1em;
+        /* background: black; */
+        gap: 1em;
+        border-radius: 99999px;
+      }
+
+      button {
+        background: transparent;
+        color: white;
+        border: none;
+        outline: none;
+      }
+
+      @media screen and (max-width: 500px) {
+        video {
+          width: calc(100vw / 1);
+        }
+
+        article {
+          opacity: 1 !important;
+        }
+
+        article.active {
+          transform: none !important;
+        }
       }
     </style>
   </head>
   <body>
+    <footer>
+      <nav>
+        <button>increase</button>
+        <button>decrease</button>
+        <button>mute</button>
+      </nav>
+    </footer>
     <main></main>
     <script>
       let active = null
