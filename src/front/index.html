@@ -110,6 +110,7 @@
     <script>
       let active = null
       let scale = 8
+      const isMobile = window.matchMedia('(max-width: 500px)').matches
 
       async function init() {
         const response = await fetch('/f')
@@ -129,19 +130,35 @@
           v.loop = true
           v.muted = true
 
-          v.addEventListener('mouseenter', () => {
-            v.play()
-            v.parentNode.classList.add('active')
-            active = v
-            v.muted = false
-          })
+          if (isMobile) {
+            v.addEventListener('click', () => {
+              if (active) {
+                active.pause()
+                active.muted = true
+                active.parentNode.classList.remove('active')
+                active = null
+              }
 
-          v.addEventListener('mouseleave', () => {
-            v.pause()
-            v.parentNode.classList.remove('active')
-            v.muted = true
-            active = null
-          })
+              v.play()
+              v.muted = false
+              v.parentNode.classList.add('active')
+              active = v
+            })
+          } else {
+            v.addEventListener('mouseenter', () => {
+              v.play()
+              v.parentNode.classList.add('active')
+              v.muted = false
+              active = v
+            })
+
+            v.addEventListener('mouseleave', () => {
+              v.pause()
+              v.parentNode.classList.remove('active')
+              v.muted = true
+              active = null
+            })
+          }
 
           d.appendChild(p)
           d.appendChild(v)
