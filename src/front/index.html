@@ -36,7 +36,8 @@
         z-index: 5;
       }
 
-      video {
+      video,
+      img {
         display: block;
         width: calc(100vw / 7);
         height: auto;
@@ -126,9 +127,12 @@
           v.src = `/data/${f.name}`
           v.poster = `/data/${f.name}.png`
           v.controls = false
-          v.autoplay = false
+          v.autoplay = true
           v.loop = true
           v.muted = true
+
+          const i = document.createElement('img')
+          i.src = `/data/${f.name}.png`
 
           if (isMobile) {
             v.addEventListener('click', () => {
@@ -161,6 +165,7 @@
           }
 
           d.appendChild(p)
+          /* d.appendChild(i) */
           d.appendChild(v)
           document.querySelector('main').appendChild(d)
         })
