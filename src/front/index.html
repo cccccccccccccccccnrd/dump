@@ -148,11 +148,13 @@
           i.addEventListener('click', () => {
             if (active === i) {
               v.pause()
+              v.poster = ''
               v.src = ''
               active = i
               return
             }
 
+            v.poster = `/data/${f.name.replace('.mp4', '')}.png`
             v.src = `/data/${f.name}`
             v.play()
             active = i
