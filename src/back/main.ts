@@ -13,6 +13,7 @@ app.get('/f', async (c) => {
     const d = await Deno.stat(`../data/${f.name}`)
     files.push({
       name: f.name,
+      url: `https://dump.cnrd.computer/data/${f.name}`,
       timestamp: d.birthtime ? Date.parse(d.birthtime.toISOString()) : 0,
       size: d.size
     })
