@@ -32,11 +32,22 @@
 
       article.active {
         opacity: 1;
-        transform: scale(2);
+        /* transform: scale(2); */
         z-index: 5;
       }
 
-      video,
+      video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: block;
+        width: auto;
+        height: 100vh;
+        cursor: zoom-in;
+        z-index: 100;
+        pointer-events: none;
+      }
+
       img {
         display: block;
         width: calc(100vw / 7);
@@ -116,6 +127,15 @@
       async function init() {
         const response = await fetch('/f')
         const dump = await response.json()
+
+        const v = document.createElement('video')
+        v.controls = false
+        v.autoplay = false
+        v.loop = true
+        v.muted = true
+
+        document.querySelector('body').appendChild(v)
+
         dump.map((f) => {
           const d = document.createElement('article')
           const p = document.createElement('p')
@@ -123,50 +143,24 @@
             f.timestamp
           ).toLocaleTimeString('en-US')}`
 
-          const v = document.createElement('video')
-          v.src = `/data/${f.name}`
-          v.poster = `/data/${f.name.replace('.mp4', '')}.png`
-          v.controls = false
-          v.autoplay = true
-          v.loop = true
-          v.muted = true
-
           const i = document.createElement('img')
           i.src = `/data/${f.name.replace('.mp4', '')}.png`
-
-          if (isMobile) {
-            v.addEventListener('click', () => {
-              if (active) {
-                active.pause()
-                active.muted = true
-                active.parentNode.classList.remove('active')
-                active = null
-              }
-
-              v.play()
-              v.muted = false
-              v.parentNode.classList.add('active')
-              active = v
-            })
-          } else {
-            v.addEventListener('mouseenter', () => {
-              v.play()
-              v.parentNode.classList.add('active')
-              v.muted = false
-              active = v
-            })
-
-            v.addEventListener('mouseleave', () => {
+          i.addEventListener('click', () => {
+            if (active === i) {
               v.pause()
-              v.parentNode.classList.remove('active')
-              v.muted = true
-              active = null
-            })
-          }
+              v.src = ''
+              active = i
+              return
+            }
+
+            v.src = `/data/${f.name}`
+            v.play()
+            active = i
+          })
 
           d.appendChild(p)
-          /* d.appendChild(i) */
-          d.appendChild(v)
+          d.appendChild(i)
+          /* d.appendChild(v) */
           document.querySelector('main').appendChild(d)
         })
       }
@@ -185,7 +179,7 @@
           scale = 1
         }
 
-        document.querySelectorAll('video').forEach((v) => {
+        document.querySelectorAll('img').forEach((v) => {
           v.style.width = `calc(100vw / ${scale})`
         })
       })
