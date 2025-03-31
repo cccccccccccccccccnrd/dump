@@ -11,11 +11,11 @@ app.get('/f', async (c) => {
   const files = []
   for await (const f of mp4s) {
     const d = await Deno.stat(`../data/${f.name}`)
+    console.log(Date.parse(d.birthtime.toISOString()))
     files.push({
       name: f.name,
       url: `https://dump.cnrd.computer/data/${f.name}`,
-      timestamp: d.birthtime ? Date.parse(d.birthtime.toISOString()) : 0,
-      size: d.size
+      stats: d
     })
   }
   return c.json(files.sort((a, b) => b.timestamp - a.timestamp))
